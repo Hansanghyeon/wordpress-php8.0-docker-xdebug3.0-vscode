@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  wordpress:
+    env_file:
+      - ./.env
+    build: ./.docker/xdebug
+    container_name: WP__${PROJECT_NAME}
+    restart: always
+    ports:
+      - ${PROJECT_PORT}:80
+    environment:
+      WORDPRESS_DB_HOST: workdb:3306
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+    volumes:
+      - ./.wordpress:/var/www/html
+      - ./zeplin:/var/www/html/wp-content/uploads/zeplin
+      - ./Theme:/var/www/html/wp-content/themes/base
+      - ./backup:/var/www/html/wp-content/ai1wm-backups
+    external_links:
+      - DB__workwp:mariadb
+
+networks:
+  default:
+    external:
+      name: db_work
